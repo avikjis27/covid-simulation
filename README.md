@@ -12,3 +12,5 @@ python3 simulation.py 40 60 100
 
 ```
 
+![Sample Plot for python3 simulation.py 40 100 300](plot.png)
+

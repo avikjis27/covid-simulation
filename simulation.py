@@ -55,31 +55,33 @@ def spread_covid19(X):
 	return X, day_positive,day_recovered,day_deceased
 
 
-def visualize(title):
-	plt.figure()
+def visualize(data, title, subplot_cor):
+	plt.subplot(subplot_cor[0],subplot_cor[1],subplot_cor[2])
 	plt.title(title)
-	plt.imshow(X[0][0:][0:], cmap="gray")
-	plt.show(block=False)
-	input()
-def draw_graph(total_positive_arr, total_recovered_arr, total_deceased_arr, day_wise_count):
-	
-	plt.plot(total_positive_arr, label='Total potive')
-	plt.plot(total_recovered_arr, label='Total recoverd')
-	plt.plot(total_deceased_arr, label='Total deceased')
-	plt.plot(day_wise_count, label='day wise count')
+	plt.imshow(data, cmap="gray")
+
+def draw_graph(data_map, title, subplot_cor):
+	plt.subplot(subplot_cor[0],subplot_cor[1],subplot_cor[2])
+	plt.title(title)
+	for key in data_map:
+		plt.plot(data_map[key], label=key)
 	plt.legend()
+
 
 if __name__ == "__main__":
 	random.seed(sys.argv[1]) 
 	n = int(sys.argv[2])+2
 	total_day_to_observe = int(sys.argv[3])
 	X = np.zeros([3,n,n],int)
+	#X = np.random.choice([0, 1], size=(3,n,n), p=[1./3, 2./3])
 	X[0][int(n/2)][int(n/2)] = 1
 	X[0][int(n-4)][4] = 1
 	total_positive_arr=[]
 	total_recovered_arr=[]
 	total_deceased_arr=[]
 	day_wise_count=[]
+	day_wise_recovered=[]
+	day_wise_deceased=[]
 
 	total_positive,total_recovered,total_deceased,total_active = 0,0,0,0
 	for day in range(1,total_day_to_observe):
@@ -88,14 +90,29 @@ if __name__ == "__main__":
 		total_positive_arr.append(total_positive)
 		day_wise_count.append(day_positive)
 		total_deceased = total_deceased + day_deceased
+		day_wise_deceased.append(day_deceased)
 		total_deceased_arr.append(total_deceased)
 		total_recovered = total_recovered + day_recovered
 		total_recovered_arr.append(total_recovered)
+		day_wise_recovered.append(day_recovered)
 		total_active = total_positive-total_recovered
-		
-	draw_graph(total_positive_arr, total_recovered_arr, total_deceased_arr, day_wise_count)	
-	visualize(f"Day-{day}| positive: {total_positive}, active: {total_active}, recovered: {total_recovered}, deceased: {total_deceased}")
-
+	aggregate_data = {
+		"total_positive": total_positive_arr,
+		"total_deceased": total_deceased_arr,
+		"total_recovered": total_recovered_arr
+	}
+	daily_data = {
+		"daily_positive": day_wise_count,
+		"daily_deceased": day_wise_deceased,
+		"daily_recovered": day_wise_recovered
+	}
+	plt.figure()
+	visualize(X[0][0:][0:], f"Day-{day}| positive: {total_positive}, active: {total_active}, recovered: {total_recovered}, deceased: {total_deceased}", (2,2,1))
+	visualize(X[2][0:][0:], "Recoverd and deceased plot", (2,2,2))
+	draw_graph(aggregate_data, "Aggregate data", (2,2,3))
+	draw_graph(daily_data, "Per day data",(2,2,4))	
+	plt.show()
+	plt.close()
 			
 
 
