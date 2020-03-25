@@ -55,11 +55,19 @@ def spread_covid19(X):
 	return X, day_positive,day_recovered,day_deceased
 
 
-def visualize(plt, title):
+def visualize(title):
+	plt.figure()
 	plt.title(title)
 	plt.imshow(X[0][0:][0:], cmap="gray")
 	plt.show(block=False)
 	input()
+def draw_graph(total_positive_arr, total_recovered_arr, total_deceased_arr, day_wise_count):
+	
+	plt.plot(total_positive_arr, label='Total potive')
+	plt.plot(total_recovered_arr, label='Total recoverd')
+	plt.plot(total_deceased_arr, label='Total deceased')
+	plt.plot(day_wise_count, label='day wise count')
+	plt.legend()
 
 if __name__ == "__main__":
 	random.seed(sys.argv[1]) 
@@ -67,16 +75,26 @@ if __name__ == "__main__":
 	total_day_to_observe = int(sys.argv[3])
 	X = np.zeros([3,n,n],int)
 	X[0][int(n/2)][int(n/2)] = 1
-	fig=plt.figure()
+	X[0][int(n-4)][4] = 1
+	total_positive_arr=[]
+	total_recovered_arr=[]
+	total_deceased_arr=[]
+	day_wise_count=[]
+
 	total_positive,total_recovered,total_deceased,total_active = 0,0,0,0
 	for day in range(1,total_day_to_observe):
 		X, day_positive,day_recovered,day_deceased = spread_covid19(X)
 		total_positive = total_positive + day_positive
+		total_positive_arr.append(total_positive)
+		day_wise_count.append(day_positive)
 		total_deceased = total_deceased + day_deceased
+		total_deceased_arr.append(total_deceased)
 		total_recovered = total_recovered + day_recovered
+		total_recovered_arr.append(total_recovered)
 		total_active = total_positive-total_recovered
 		
-	visualize(plt, f"Day-{day}| positive: {total_positive}, active: {total_active}, recovered: {total_recovered}, deceased: {total_deceased}")
+	draw_graph(total_positive_arr, total_recovered_arr, total_deceased_arr, day_wise_count)	
+	visualize(f"Day-{day}| positive: {total_positive}, active: {total_active}, recovered: {total_recovered}, deceased: {total_deceased}")
 
 			
 
