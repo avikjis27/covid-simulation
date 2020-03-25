@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import random
 import time
+import sys
 
-def spread_covid(X):
+def spread_covid19(X):
 	death_code = 2
 	immune_code = 3
 	healthy_code = 0
@@ -37,10 +38,10 @@ def spread_covid(X):
 			if covid_cell > 0 and X[0][rowid][colid] == 0:
 				infection_chance = random.randint(1,100)
 				if infection_chance <= 25:
-					X[0][rowid][colid] = 1
+					X[0][rowid][colid] = sick_code
 			if X[0][rowid][colid] == 1:
 				death_chance = random.randint(1,100)
-				if death_chance < 3 and X[1][rowid][colid] >= 7:
+				if death_chance < 3 and X[1][rowid][colid] >= 14:
 					X[2][rowid][colid] = death_code
 					X[0][rowid][colid] = 0
 				if death_chance >=3 and X[1][rowid][colid] >= 14:
@@ -50,22 +51,22 @@ def spread_covid(X):
 
 
 if __name__ == "__main__":
-	
-	n = 22
+	random.seed(sys.argv[1]) 
+	n = int(sys.argv[2])+2
+	total_day_to_observe = int(sys.argv[3])
 	X = np.zeros([3,n,n],int)
 	
-	X[0][3][3] = 1
-	X[0][4][6] = 1
+	X[0][int(n/2)][int(n/2)] = 1
 	fig=plt.figure()
-	for day in range(1,100):
+	for day in range(1,total_day_to_observe):
 		plt.title(f"Day-{day}")
 		plt.imshow(X[0][0:][0:], cmap="gray")
 		plt.show(block=False)
 		plt.pause(1)
-		X = spread_covid(X)
+		X = spread_covid19(X)
 
-	plt.show(block=False)
-	plt.title(f"Total Death and recovered")
+	plt.close()
+	plt.title("Death and recovered")
 	plt.imshow(X[2][0:][0:], cmap="gray")
 	plt.show()
 
