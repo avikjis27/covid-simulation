@@ -11,6 +11,11 @@ Example
 python3 simulation.py 40 60 100
 
 ```
+- **In the top left image:** Black dots are either not infected or recovered and white dots are infected.
+- **In the top right image:** Black dots are not infected, white dots are recovered and gray dots are deceased.
+- **In the down left graph:** Shows the aggregate data
+- **In the down right graph:** Shows day wise data
+
 
 ![Sample Plot for python3 simulation.py 40 100 300](plot.png)
 
